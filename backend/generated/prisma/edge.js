@@ -124,7 +124,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/24LP8305/Desktop/buy-me-coffee/backend/generated/prisma",
+      "value": "/Users/javascript/Desktop/git/myGitRoot/buy-me-coffee/backend/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -138,7 +138,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/24LP8305/Desktop/buy-me-coffee/backend/prisma/schema.prisma",
+    "sourceFilePath": "/Users/javascript/Desktop/git/myGitRoot/buy-me-coffee/backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -152,17 +152,18 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMTk5YTczYWMtODQzZi00YmE0LWJmNTYtODk2NzJjZTRmZDAzIiwidGVuYW50X2lkIjoiOTAzN2ZkMzczNjRmOTA5NTYzNzZiNmIwYjE3ZTdjN2M4MzM1MDcwNTA5MDg2N2JkYTQxMzU1MTBkMjNhY2NmNCIsImludGVybmFsX3NlY3JldCI6IjE5Y2FlZTc1LTAxMjYtNDIzMC1iMTYyLTc0MGU3MjMzMjA1YSJ9.Fi-hXYbPGxwwer_0J5oVcATr66o8ofphKxwBcFTfGhg"
+        "value": null
       }
     }
   },
   "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id       Int    @id @default(autoincrement())\n  email    String @unique\n  username String\n  password String\n}\n",
   "inlineSchemaHash": "f1d17b8a93d179213afcc404fda1a87fdcde7dd880e185b3683039420df9345f",
-  "copyEngine": false
+  "copyEngine": true
 }
 config.dirname = '/'
 
