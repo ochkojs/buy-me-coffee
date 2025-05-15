@@ -25,6 +25,34 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+function isValidCard(cardNumber: string) {
+  // Remove spaces and non-numeric characters
+  const cleanCardNumber = cardNumber.replace(/\D/g, "");
+
+  // Check if the card number is empty or contains non-digit characters
+  if (!cleanCardNumber || !/^\d+$/.test(cleanCardNumber)) {
+    return false;
+  }
+
+  // Luhn Algorithm
+  let sum = 0;
+  let isSecond = false;
+
+  for (let i = cleanCardNumber.length - 1; i >= 0; i--) {
+    let digit = parseInt(cleanCardNumber.charAt(i), 10);
+
+    if (isSecond) {
+      digit *= 2;
+      if (digit > 9) {
+        digit -= 9;
+      }
+    }
+    sum += digit;
+    isSecond = !isSecond;
+  }
+  return sum % 10 === 0;
+}
+
 const formSchema = z.object({
   firstname: z.string().min(2, {
     message: "First name must match",
@@ -32,13 +60,13 @@ const formSchema = z.object({
   lastname: z.string().min(2, {
     message: "Last name must match",
   }),
-  bankcard: z.string().length(16, {
+  bankcard: z.string().refine(isValidCard, {
     message: "Invalid card number",
   }),
-  country: z.string().min(2, {
+  country: z.string().min(1, {
     message: "Select country to continue",
   }),
-  month: z.string().min(2, {
+  month: z.string().min(1, {
     message: "Invalid month",
   }),
   year: z.string().min(2, {
@@ -81,7 +109,7 @@ export const BankCardComponent = () => {
                 <FormItem>
                   <FormLabel>Select Country</FormLabel>
                   <FormControl>
-                    <Select>
+                    <Select onValueChange={field.onChange} value={field.value}>
                       <SelectTrigger className="w-[520px]">
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
@@ -178,7 +206,8 @@ export const BankCardComponent = () => {
                     <FormLabel>Expires</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
+                      defaultValue=""
                     >
                       <FormControl>
                         <SelectTrigger className="w-40">
@@ -208,7 +237,8 @@ export const BankCardComponent = () => {
                     <FormLabel>Year</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
+                      defaultValue=""
                     >
                       <FormControl>
                         <SelectTrigger className="w-40">
@@ -241,6 +271,7 @@ export const BankCardComponent = () => {
                         className="w-[160px]"
                         placeholder="CVC"
                         {...field}
+                        defaultValue=""
                       />
                     </FormControl>
                     <FormMessage />

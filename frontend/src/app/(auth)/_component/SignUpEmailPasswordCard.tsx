@@ -21,6 +21,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 
 const signUpSchema = z.object({
   email: z
@@ -40,15 +44,38 @@ export const SignUpEmailPasswordCard = ({ username }: { username: string }) => {
     },
   });
 
-  const handleSignUp = (values: z.infer<typeof signUpSchema>) => {
-    console.log(values.email, values.password);
+  const router = useRouter();
+
+  const handleSignUpClick = async (values: z.infer<typeof signUpSchema>) => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/user/create`,
+        {
+          username: username,
+          email: values.email,
+          password: values.password,
+        }
+      );
+      if (res.status === 200) {
+        router.push("/");
+        toast(
+          "Бүртгэл амжилттай. Та одоо имэйл хаяг болон нууц үгээрээ нэвтэрнэ үү"
+        );
+      } else if (res.status === 405) {
+        toast("Бүртгэлтэй имэйл байна. та нууц үгээ сэргээнэ үү");
+      } else {
+        console.error("Failed to register", res.data);
+      }
+    } catch (error) {
+      console.error("Signup error", error);
+    }
   };
 
   return (
     <div className="flex w-[100%] h-screen justify-center items-center">
       <Card className="border-none shadow-none">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSignUp)} className="">
+          <form onSubmit={form.handleSubmit(handleSignUpClick)} className="">
             <div className="flex flex-col w-[360px] gap-6">
               <CardHeader>
                 <CardTitle className="font-bold text-2xl">

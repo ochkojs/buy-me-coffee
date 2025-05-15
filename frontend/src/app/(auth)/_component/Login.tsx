@@ -22,6 +22,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { Smile } from "lucide-react";
 
 const loginSchema = z.object({
   email: z
@@ -33,6 +37,7 @@ const loginSchema = z.object({
 });
 
 export const LoginCard = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -41,8 +46,44 @@ export const LoginCard = () => {
     },
   });
 
-  const handleLogin = (values: z.infer<typeof loginSchema>) => {
-    console.log(values.email, values.password);
+  // const handleLogin = (values: z.infer<typeof loginSchema>) => {
+  //   console.log(values.email, values.password);
+  // };
+
+  const signInSchema = z.object({
+    email: z
+      .string({ required_error: "Please enter email!" })
+      .email({ message: "Please enter email valid" }),
+    password: z
+      .string()
+      .min(8, { message: "Password should be more than 8 letters" }),
+  });
+
+  const handleLoginClick = async (values: z.infer<typeof signInSchema>) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URI}/auth`,
+        {
+          email: values.email,
+          password: values.password,
+        }
+      );
+      if (response.data.token)
+        localStorage.setItem("token", response.data.token);
+      if (response.status === 200 || response.status === 201) {
+        router.push("/");
+        toast(
+          <div className="flex gap-3 text-green-700">
+            <Smile size={20} color="green" /> Тавтай Морилно уу. Амжилттай
+            нэвтэрлээ
+          </div>
+        );
+      } else {
+        console.error("Failed to register", response.data);
+      }
+    } catch (error) {
+      console.error("Sign in error", error);
+    }
   };
 
   return (
@@ -54,7 +95,7 @@ export const LoginCard = () => {
       >
         <Card className="border-none shadow-none">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleLogin)} className="">
+            <form onSubmit={form.handleSubmit(handleLoginClick)} className="">
               <div className="flex flex-col w-[360px] gap-6">
                 <CardHeader>
                   <CardTitle className="font-bold text-2xl">
