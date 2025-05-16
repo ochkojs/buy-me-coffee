@@ -26,6 +26,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Smile } from "lucide-react";
+import { useState } from "react";
 
 const loginSchema = z.object({
   email: z
@@ -37,6 +38,7 @@ const loginSchema = z.object({
 });
 
 export const LoginCard = () => {
+  const [error, setError] = useState<string>();
   const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -45,10 +47,6 @@ export const LoginCard = () => {
       password: "",
     },
   });
-
-  // const handleLogin = (values: z.infer<typeof loginSchema>) => {
-  //   console.log(values.email, values.password);
-  // };
 
   const signInSchema = z.object({
     email: z
@@ -71,7 +69,7 @@ export const LoginCard = () => {
       if (response.data.token)
         localStorage.setItem("token", response.data.token);
       if (response.status === 200 || response.status === 201) {
-        router.push("/");
+        router.push("/profile");
         toast(
           <div className="flex gap-3 text-green-700">
             <Smile size={20} color="green" /> Тавтай Морилно уу. Амжилттай
@@ -81,8 +79,9 @@ export const LoginCard = () => {
       } else {
         console.error("Failed to register", response.data);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Sign in error", error);
+      setError(error.response.data.message);
     }
   };
 
@@ -134,6 +133,9 @@ export const LoginCard = () => {
                           />
                         </FormControl>
                         <FormMessage />
+                        {error && (
+                          <p className="text-red-500 text-sm">{error}</p>
+                        )}
                       </FormItem>
                     )}
                   />

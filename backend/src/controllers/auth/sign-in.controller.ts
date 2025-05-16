@@ -12,25 +12,23 @@ export const signIn = async (req: Request, res: Response) => {
       where: { email: email },
     });
 
-    if (!user) return res.send({ message: "User not found" });
+    if (!user) return res.status(401).send({ message: "User not found" });
 
     const isMatch = compareSync(password, user.password);
 
     if (!isMatch) return res.send({ message: "email or password wrong" });
 
     const token = jwt.sign(user, secret_key as any, { expiresIn: 3600 });
-
-    return res
-      .cookie("token", token, {
-        maxAge: 60 * 1000 * 10,
-        secure: false, // Deploy-дох үед true болгох ёстой
-      })
-      .send();
-
-    return res.send({
-      success: true,
-      message: user,
+    res.cookie("token", token, {
+      maxAge: 60 * 1000 * 10,
+      secure: false, // Deploy-дох үед true болгох ёстой
     });
+    return res.send({ message: "Success", token: token });
+
+    // return res.send({
+    //   success: true,
+    //   message: user,
+    // });
   } catch (error) {
     console.error("Error creating user:", error);
     return res.status(500).send({

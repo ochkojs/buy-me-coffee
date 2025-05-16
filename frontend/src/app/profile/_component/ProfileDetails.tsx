@@ -10,8 +10,15 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Dispatch, SetStateAction } from "react";
 
-export const ProfileDetailComponents = () => {
+export const ProfileDetailComponents = ({
+  setStep,
+}: {
+  setStep: Dispatch<SetStateAction<number>>;
+}
+  
+) => {
   return (
     <div className="flex flex-col h-screen justify-center items-center">
       <Card className="w-[510px] border-none shadow-none">

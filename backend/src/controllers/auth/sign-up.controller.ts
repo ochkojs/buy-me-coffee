@@ -11,7 +11,7 @@ const checker = async (req, res) => {
       where: { username: username },
     });
     if (user) {
-      return res.send({ message: "User already taken" });
+      return res.status(401).send({ message: "User already taken" });
     }
     return;
     res.send({ message: "Username available" });
@@ -38,6 +38,7 @@ export const signUp = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Error creating user:", error);
+
     return res.status(500).send({
       success: false,
       message: "Internal Server Error",

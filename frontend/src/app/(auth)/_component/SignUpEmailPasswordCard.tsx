@@ -24,7 +24,8 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
+import { Smile } from "lucide-react";
+import { useState } from "react";
 
 const signUpSchema = z.object({
   email: z
@@ -36,6 +37,7 @@ const signUpSchema = z.object({
 });
 
 export const SignUpEmailPasswordCard = ({ username }: { username: string }) => {
+  const [error, setError] = useState<string>();
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -59,7 +61,10 @@ export const SignUpEmailPasswordCard = ({ username }: { username: string }) => {
       if (res.status === 200) {
         router.push("/");
         toast(
-          "Бүртгэл амжилттай. Та одоо имэйл хаяг болон нууц үгээрээ нэвтэрнэ үү"
+          <div className="flex gap-3 text-green-700">
+            <Smile size={20} color="green" /> Бүртгэл амжилттай. Та одоо имэйл
+            хаяг болон нууц үгээрээ нэвтэрнэ үү
+          </div>
         );
       } else if (res.status === 405) {
         toast("Бүртгэлтэй имэйл байна. та нууц үгээ сэргээнэ үү");
