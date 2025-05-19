@@ -10,15 +10,31 @@ import {
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { uploadImage } from "@/app/utils/image-uploads";
+import { ImageUpload } from "@/components/myComponents/Imageuploads";
 
 export const ProfileDetailComponents = ({
   setStep,
 }: {
   setStep: Dispatch<SetStateAction<number>>;
-}
-  
-) => {
+}) => {
+  const [file, setFile] = useState<File>();
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) setFile(event.target.files[0]);
+  };
+  console.log(file);
+
+  const handleOnClick = async (file?: File) => {
+    if (!file) {
+      console.log("Зургаа оруулна уу");
+      return;
+    }
+    const imageUrl = await uploadImage(file);
+    console.log(imageUrl, "Imageurl");
+  };
+
   return (
     <div className="flex flex-col h-screen justify-center items-center">
       <Card className="w-[510px] border-none shadow-none">
@@ -31,11 +47,13 @@ export const ProfileDetailComponents = ({
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Add photo</Label>
                 <div className="flex justify-center w-40 h-40 rounded-full border-2 border-dashed">
-                  <Input
+                  {/* <ImageUpload file={file} handleFileChange={} /> */}
+                  {/* <Input
                     id="pic"
                     type="file"
+                    onChange={handleFileChange}
                     className="flex justify-center w-40 h-40 border-none shadow-none"
-                  />
+                  /> */}
                 </div>
               </div>
               <div className="flex flex-col space-y-1.5">
@@ -57,7 +75,9 @@ export const ProfileDetailComponents = ({
           </form>
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button className="w-50">Continue</Button>
+          <Button className="w-50" onClick={() => handleOnClick(file)}>
+            Continue
+          </Button>
         </CardFooter>
       </Card>
     </div>
