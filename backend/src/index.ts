@@ -3,6 +3,7 @@ import { userRouter } from "./routers/user";
 import { authRouter } from "./routers/auth";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { profileRouter } from "./routers/profile";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(cookieParser());
 
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
+app.use("/profile", profileRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

@@ -16,4 +16,29 @@ model User {
   email      String  @unique
   username   String  @unique
   password   String
+  // receivedDonations Donation[]
+  profile Profile?
+}
+
+model Profile {
+  id Int @id @default(autoincrement())
+  name String
+  about String
+  user User @relation(fields: [donorId], references: [id], onDelete: Restrict)
+  donorId Int @unique
+  avatarImage String
+  socialMediaUrl String
+  backgroundImage String
+  successMessage String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Donation {
+  id Int @id @default(autoincrement())
+  amount Int
+  donorId Int
+  recipenId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

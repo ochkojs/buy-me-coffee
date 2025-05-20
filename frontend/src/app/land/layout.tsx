@@ -29,10 +29,10 @@ export default function LandLayout({
         <div>ACCOUNT PROFILE</div>
       </div>
       <div className="flex gap-20">
-        <div className="w-[25%] h-screen">
+        <div className="w-[20%] h-screen">
           <LandLeftComponent />
         </div>
-        <div className="w-750%] h-screen">{children}</div>
+        <div className="w-80%] h-screen">{children}</div>
       </div>
     </div>
   );
